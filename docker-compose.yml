@@ -1,0 +1,32 @@
+version: "3.3"
+
+services:
+  mediawiki:
+    build:
+      context: ./mediawiki
+      dockerfile: Dockerfile
+    links:
+      - db
+    volumes:
+      - wikidata:/var/www/html
+      - ./mediawiki/LocalSettings.php:/var/www/html/LocalSettings.php
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx/mediawiki.conf:/etc/nginx/nginx.conf
+      - wikidata:/var/www/html
+      - ./mediawiki/logo.png:/var/www/html/logo.png
+    links:
+      - mediawiki
+    ports:
+      - 8080:80
+
+  db:
+    image: postgres:10.4-alpine
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+
+volumes:
+  wikidata:
+  dbdata:
