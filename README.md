@@ -20,6 +20,13 @@ Navigate with your browser to the [service](http://localhost:8080) and complete 
 
 Once done, you will need to copy the LocalSettings.php in the container and reset the volume links in docker-compose.yml.
 
+# Restore DB From SQL
+You can seed the postgres database from an existing mediawiki database with the following command:
+
+```bash
+docker exec -i $(docker-compose ps -q mediawikidb) psql -Uwikiuser wikidb < backup.sql
+```
+
 
 # References
 * [Hermsi1337/full_php_dev_stack](https://github.com/Hermsi1337/docker-compose/tree/master/full_php_dev_stack)

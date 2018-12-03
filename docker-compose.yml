@@ -5,8 +5,9 @@ services:
     build:
       context: ./mediawiki
       dockerfile: Dockerfile
-    links:
-      - db
+    networks:
+      - wikiweb
+      - wikidb
     volumes:
       - wikidata:/var/www/html
       - ./mediawiki/LocalSettings.php:/var/www/html/LocalSettings.php
@@ -17,16 +18,26 @@ services:
       - ./nginx/mediawiki.conf:/etc/nginx/nginx.conf
       - wikidata:/var/www/html
       - ./mediawiki/logo.png:/var/www/html/logo.png
-    links:
-      - mediawiki
+    networks:
+      - wikiweb
     ports:
-      - 8080:80
+      - 80:80
 
-  db:
+  mediawikidb:
     image: postgres:10.4-alpine
+    environment:
+      POSTGRES_USER: wikiuser
+      POSTGRES_PASSWORD: wikipass
+      POSTGRES_DB: wikidb
     volumes:
       - dbdata:/var/lib/postgresql/data
+    networks:
+      - wikidb
 
 volumes:
   wikidata:
   dbdata:
+
+networks:
+  wikiweb:
+  wikidb:
