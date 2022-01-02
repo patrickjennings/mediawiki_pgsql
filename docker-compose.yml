@@ -13,18 +13,17 @@ services:
       - ./mediawiki/LocalSettings.php:/var/www/html/LocalSettings.php
 
   nginx:
-    image: nginx:alpine
+    image: nginx:1.21.5-alpine
     volumes:
       - ./nginx/mediawiki.conf:/etc/nginx/nginx.conf
       - wikidata:/var/www/html
-      - ./mediawiki/logo.png:/var/www/html/logo.png
     networks:
       - wikiweb
     ports:
       - 80:80
 
   mediawikidb:
-    image: postgres:10.4-alpine
+    image: postgres:14.1-alpine
     environment:
       POSTGRES_USER: wikiuser
       POSTGRES_PASSWORD: wikipass

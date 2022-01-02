@@ -1,27 +1,34 @@
-FROM php:7.2.7-fpm-alpine3.7
-
-# PHP extension dependencies
-RUN apk update && \
-    apk add --no-cache \
-            libjpeg-turbo-dev \
-            libpng-dev \
-            freetype-dev \
-            icu-dev \
-            libxslt-dev \
-            postgresql-dev \
-            gmp-dev \
-            imagemagick-dev && \
-    rm -rf /tmp/* /var/cache/apk/*
+FROM php:7.4-fpm-alpine
 
 # PHP extensions
 RUN apk update && \
     apk add --no-cache \
+        libjpeg-turbo \
+        libpng \
+        freetype \
+        icu \
+        libxslt \
+        postgresql-libs \
+        gmp \
+        imagemagick-libs \
+        libgomp \
+        libzip && \
+    apk add --no-cache \
         --virtual .phpize-deps \
+        libjpeg-turbo-dev \
+        libpng-dev \
+        freetype-dev \
+        icu-dev \
+        libxslt-dev \
+        postgresql-dev \
+        gmp-dev \
+        imagemagick-dev \
+        libzip-dev \
 		$PHPIZE_DEPS && \
     docker-php-source extract && \
     docker-php-ext-configure gd \
-        --with-freetype-dir=/usr/include/ \
-        --with-jpeg-dir=/usr/include/ && \
+        --with-freetype \
+        --with-jpeg && \
     docker-php-ext-configure opcache --enable-opcache && \
     docker-php-ext-install -j"$(nproc)" \
         intl \
@@ -36,10 +43,10 @@ RUN apk update && \
         opcache && \
     pecl install \
         apcu \
-        imagick \
+        imagick && \
     docker-php-ext-enable \
         apcu \
-        imagick \
+        imagick && \
     docker-php-source delete && \
     apk del .phpize-deps && \
     rm -rf /tmp/* /var/cache/apk/*
@@ -64,10 +71,10 @@ RUN { \
 
 
 # https://github.com/wikimedia/mediawiki-docker/blob/master/stable/Dockerfile
-ENV MEDIAWIKI_MAJOR_VERSION 1.31
+ENV MEDIAWIKI_MAJOR_VERSION 1.37
 ENV MEDIAWIKI_BRANCH REL1_31
-ENV MEDIAWIKI_VERSION 1.31.0
-ENV MEDIAWIKI_SHA512 50ad9303b0c0bd8380dea7489be18a4022d5b65a31961af8d36c3c9ff6d74cdf25e8e10137ef1e025b4287e9ee9b7e0bf4198ca342a46ab42915c91f1ddaf940
+ENV MEDIAWIKI_VERSION 1.37.1
+ENV MEDIAWIKI_SHA512 9a8a1be9b0a9ffa506226c8e74cbd817a5ea39f404cf5931530896e5d831e57b7b56ff44d775c00dae88be16f01c9a12bf7d10d25c055674d8de4376d7d9c942
 
 # MediaWiki setup
 RUN curl -fSL "https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_MAJOR_VERSION}/mediawiki-${MEDIAWIKI_VERSION}.tar.gz" -o mediawiki.tar.gz \
