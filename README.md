@@ -10,15 +10,28 @@ This stack uses the following:
 
 
 # Installation
-In docker-compose.yml, comment out the volume links for LocalSettings.php and logo.png on first start.
+In docker-compose.yml, comment out the volume link for LocalSettings.php on first start.
 
 ```bash
 docker-compose up
 ```
 
-Navigate with your browser to the [service](http://localhost:8080) and complete the initial setup.
+Navigate with your browser to http://localhost/mw-config/index.php and complete the initial setup.
 
-Once done, you will need to copy the LocalSettings.php in the container and reset the volume links in docker-compose.yml.
+For the database setup, select PostgreSQL with the following attributes:
+
+| Database Attribute | Value |
+|---|---|
+| Database host | mediawikidb |
+| Database port | 5432 |
+| Database name | wikidb |
+| Schema for MediaWiki | mediawiki |
+| Database username | wikiuser |
+| Database password | wikipass |
+
+These are configurable through the environment variables in the docker-compose.yml
+
+Once done, you will need to copy the LocalSettings.php and reset the volume link in the docker-compose.yml.
 
 # Restore DB From SQL
 You can seed the postgres database from an existing mediawiki database with the following command:
