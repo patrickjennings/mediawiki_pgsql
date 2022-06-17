@@ -38,15 +38,18 @@ RUN apk update && \
         pgsql \
         pdo_pgsql \
         gmp \
-        iconv \
         gd \
-        opcache && \
+        opcache \
+        mysqli \
+        pdo \
+        pdo_mysql && \
     pecl install \
         apcu \
         imagick && \
     docker-php-ext-enable \
         apcu \
-        imagick && \
+        imagick \
+        pdo_mysql && \
     docker-php-source delete && \
     apk del .phpize-deps && \
     rm -rf /tmp/* /var/cache/apk/*

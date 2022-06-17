@@ -10,7 +10,7 @@ services:
       - wikidb
     volumes:
       - wikidata:/var/www/html
-      - ./mediawiki/LocalSettings.php:/var/www/html/LocalSettings.php
+      - ./LocalSettings.php:/var/www/html/LocalSettings.php
 
   nginx:
     image: nginx:1.21.5-alpine
